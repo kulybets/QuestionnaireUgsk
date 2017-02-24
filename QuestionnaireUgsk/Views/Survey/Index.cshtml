@@ -1,0 +1,15 @@
+﻿@model IEnumerable<QuestionnaireUgsk.Models.SurveyViewModel>
+
+@{
+    ViewBag.Title = "Опросы";
+}
+
+<h3>Выберите опрос</h3>
+
+
+@foreach (var item in Model)
+{
+    <div>
+        @Html.ActionLink(item.Name, "Questionnaire", new { id = item.SurveyID })
+    </div>
+}

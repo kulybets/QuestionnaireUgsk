@@ -1,0 +1,66 @@
+﻿@model QuestionnaireUgsk.Models.SurveyViewModel
+
+@{
+    ViewBag.Title = Model.Name;
+}
+<div style="text-align:center">
+    <h2>@Model.Name</h2>
+</div>
+
+@using (Html.BeginForm("Questionnaire", "Survey", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    @Html.HiddenFor(x => x.SurveyID)
+    @Html.HiddenFor(x => x.Name)
+
+    for (Int32 j = 0; j < Model.Questions.Count; j++)
+    {
+
+        @Html.HiddenFor(x => Model.Questions[j].QuestionID)
+        @Html.HiddenFor(x => Model.Questions[j].AnswerCode)
+        @Html.HiddenFor(x => Model.Questions[j].QuestionText)
+
+        <p style="text-align:center">
+            @Html.DisplayFor(modelItem => Model.Questions[j].QuestionTextWithNumber)
+        </p>
+        <div>
+            @if (Model.Questions[j].AnswerCode == 2)
+            {
+                for (Int32 i = 0; i < @Model.Questions[j].AnswerChoices.Count; i++)
+                {
+                    <div>
+                        @Html.RadioButtonFor(x => Model.Questions[j].SelectedAnswerChoiceID, Model.Questions[j].AnswerChoices[i].AnswerChoiceID)
+                        @Model.Questions[j].AnswerChoices[i].Text
+
+                        @Html.HiddenFor(x => Model.Questions[j].AnswerChoices[i].AnswerChoiceID)
+                        @Html.HiddenFor(x => Model.Questions[j].AnswerChoices[i].Text)
+                    </div>
+                }
+            }
+            else if (Model.Questions[j].AnswerCode == 3)
+            {
+                <div>
+                    @Html.TextBoxFor(x => Model.Questions[j].TextAnswer)
+                </div>
+            }
+            else if (Model.Questions[j].AnswerCode == 1)
+            {
+                for (Int32 i = 0; i < @Model.Questions[j].AnswerChoices.Count; i++)
+                {
+                    <div>
+                        @Html.CheckBoxFor(x => Model.Questions[j].AnswerChoices[i].IsSelected)
+                        @Model.Questions[j].AnswerChoices[i].Text
+
+                        @Html.HiddenFor(x => Model.Questions[j].AnswerChoices[i].AnswerChoiceID)
+                        @Html.HiddenFor(x => Model.Questions[j].AnswerChoices[i].Text)
+                    </div>
+                }
+            }
+        </div>
+    }
+    <br />
+    <div style="text-align:right">
+        <input type="submit" value="Сохранить" />
+    </div>
+}

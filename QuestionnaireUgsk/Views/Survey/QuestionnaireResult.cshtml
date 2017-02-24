@@ -1,0 +1,53 @@
+﻿@model QuestionnaireUgsk.Models.SurveyViewModel
+
+@{
+    ViewBag.Title = Model.Name;
+}
+
+<div style="text-align:center">
+    <h2>@Model.Name</h2>
+</div>
+
+@{
+    foreach (var q in Model.Questions)
+    {
+        <p style="text-align:center">
+            @Html.DisplayFor(modelItem => q.QuestionText)
+        </p>
+
+        <div>
+            @if (q.AnswerCode == 2)
+            {
+                if (q.AnswerChoices.Where(ac => ac.AnswerChoiceID == q.SelectedAnswerChoiceID).Count() > 0)
+                {
+                    <p style="text-align:center">
+                        @q.AnswerChoices.Where(ac => ac.AnswerChoiceID == q.SelectedAnswerChoiceID).FirstOrDefault().Text
+                    </p>
+                }
+                else
+                {
+                    <p style="text-align:center">
+                        Нет ответа.
+                    </p>
+                }
+            }
+
+            else if (q.AnswerCode == 3)
+            {
+                <div style="text-align:center">
+                    @Html.DisplayTextFor(x => q.TextAnswer)
+                </div>
+            }
+
+            else if (q.AnswerCode == 1)
+            {
+                foreach (var ac in q.AnswerChoices.Where(x => x.IsSelected))
+                {
+                    <div style="text-align:center">
+                        @Html.DisplayTextFor(x => ac.Text)
+                    </div>
+                }
+            }
+        </div>
+    }
+}
